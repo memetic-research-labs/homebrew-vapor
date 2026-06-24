@@ -30,4 +30,4 @@ brew untap memetic-research-labs/vapor
 
 ## How it works
 
-This tap hosts the Cask formula that points to the latest notarized DMG published on [Vapor's GitHub Releases](https://github.com/memetic-research-labs/vapor/releases). The Cask is automatically bumped when a new Vapor tag is pushed - the Vapor release workflow dispatches an event to this repository, which updates the version, SHA256, and download URL.
+This tap hosts the Cask formula that points to the latest notarized DMG published on [Vapor's GitHub Releases](https://github.com/memetic-research-labs/vapor/releases). The Cask is updated by the Vapor maintainer's local `publish-release.sh` script when a new release is published.
