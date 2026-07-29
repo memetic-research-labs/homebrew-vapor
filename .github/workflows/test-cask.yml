@@ -1,0 +1,54 @@
+name: Test Cask
+
+on:
+  pull_request:
+    paths:
+      - Casks/**
+      - .github/workflows/test-cask.yml
+  push:
+    branches:
+      - main
+    paths:
+      - Casks/**
+      - .github/workflows/test-cask.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-cask-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install:
+    runs-on: macos-14
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Register local tap
+        run: |
+          tap_dir="$(brew --repository)/Library/Taps/memetic-research-labs/homebrew-vapor"
+          mkdir -p "$(dirname "$tap_dir")"
+          ln -s "$GITHUB_WORKSPACE" "$tap_dir"
+
+      - name: Validate cask
+        run: |
+          ruby -c Casks/vapor.rb
+          brew style Casks/vapor.rb
+          brew audit --cask --online memetic-research-labs/vapor/vapor
+
+      - name: Install cask
+        run: brew install --cask memetic-research-labs/vapor/vapor
+
+      - name: Verify installation
+        run: |
+          test -d /Applications/Vapor.app
+          codesign --verify --deep --strict /Applications/Vapor.app
+          spctl --assess --type execute /Applications/Vapor.app
+
+      - name: Uninstall cask
+        if: always()
+        run: brew uninstall --cask vapor || true
