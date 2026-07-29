@@ -40,7 +40,9 @@ jobs:
         run: |
           ruby -c Casks/vapor.rb
           brew style Casks/vapor.rb
-          brew audit --cask --online memetic-research-labs/vapor/vapor
+          # token_conflicts is skipped: homebrew/core ships an unrelated "vapor"
+          # formula, so this tap is always installed by its qualified token.
+          brew audit --cask --online --except=token_conflicts memetic-research-labs/vapor/vapor
 
       - name: Install cask
         run: brew install --cask memetic-research-labs/vapor/vapor
@@ -48,9 +50,19 @@ jobs:
       - name: Verify installation
         run: |
           test -d /Applications/Vapor.app
+          bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' /Applications/Vapor.app/Contents/Info.plist)"
+          test "$bundle_id" = "lol.mrl.app.Vapor"
           codesign --verify --deep --strict /Applications/Vapor.app
           spctl --assess --type execute /Applications/Vapor.app
 
+      - name: Verify cask version matches the app
+        run: |
+          cask_version="$(brew info --cask --json=v2 memetic-research-labs/vapor/vapor | ruby -rjson -e 'puts JSON.parse(STDIN.read)["casks"][0]["version"]')"
+          short_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' /Applications/Vapor.app/Contents/Info.plist)"
+          build_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' /Applications/Vapor.app/Contents/Info.plist)"
+          echo "cask=$cask_version app=$short_version,$build_version"
+          test "$cask_version" = "$short_version,$build_version"
+
       - name: Uninstall cask
         if: always()
-        run: brew uninstall --cask vapor || true
+        run: brew uninstall --cask memetic-research-labs/vapor/vapor || true

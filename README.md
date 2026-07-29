@@ -5,26 +5,25 @@ Homebrew Cask tap for **[Vapor](https://github.com/memetic-research-labs/vapor)*
 ## Install
 
 ```bash
-brew tap memetic-research-labs/vapor
-brew install --cask vapor
-```
-
-Or directly:
-
-```bash
 brew install --cask memetic-research-labs/vapor/vapor
 ```
+
+The full `memetic-research-labs/vapor/vapor` token is required. Homebrew already
+ships two unrelated projects under the `vapor` name — a `vapor` formula in
+homebrew/core (the Server-side Swift toolbox) and a `vapor-app` cask in
+homebrew/cask (NCAR's visualisation platform) — so plain `brew install --cask
+vapor` installs the wrong software.
 
 ## Upgrade
 
 ```bash
-brew upgrade --cask vapor
+brew upgrade --cask memetic-research-labs/vapor/vapor
 ```
 
 ## Uninstall
 
 ```bash
-brew uninstall --cask vapor
+brew uninstall --cask memetic-research-labs/vapor/vapor
 brew untap memetic-research-labs/vapor
 ```
 
