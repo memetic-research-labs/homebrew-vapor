@@ -24,6 +24,8 @@ jobs:
   install:
     runs-on: macos-14
     timeout-minutes: 20
+    env:
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
 
     steps:
       - uses: actions/checkout@v4
