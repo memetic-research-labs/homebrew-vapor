@@ -1,6 +1,6 @@
 cask "vapor" do
-  version "1.0.8,1"
-  sha256 "d55fa893233424cbc1fbfc0c266db3d7612d7331d81ca736f338286c27ae502e"
+  version "1.0.9,1"
+  sha256 "11eae1e441c968e759934cd3bd60c0f8f7057d3960c6f47ce29b81eecb3bc810"
 
   url "https://github.com/memetic-research-labs/vapor/releases/download/v#{version.csv.first}/Vapor-#{version.csv.first}-#{version.csv.second}.dmg"
   name "Vapor"
